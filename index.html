@@ -170,7 +170,10 @@
     window.addEventListener('keydown',(e)=>{
         if(e.key=="Escape"){
             if(!show)
-            window.close();
+            {
+                window.open("", "_self");
+                window.close();
+            }
             else{
                 show=false;
                 for(i of pages)i.style.display="none";
@@ -183,7 +186,6 @@
                 for(i of pages)i.style.display="none";
                 x.style.display="block";
                 show=true;
-                document.body.scrollTop = document.documentElement.scrollTop = 0;
             }
         }
     })
