@@ -10,7 +10,8 @@
 <body>
 <img id="bar" src="bar.jpg">
 <div id="pdf">
-    <div id="enter"><code><pre>
+    <code><pre>
+    <div id="enter">
 EX 1 -
 
 import numpy as np
@@ -323,8 +324,8 @@ FALSE)
 > svm_linear
 > test_pred <- predict(svm_linear, newdata = testing)
 > test_pred
-</pre></code>
 </div>
+</pre></code>
 <div id="q">
 <img src="pdf/BDARecord_00001.png">
 <img src="pdf/BDARecord_00002.png">
@@ -403,7 +404,7 @@ FALSE)
 <img src="pdf/BDARecord_00051.png">
 </div>
 </div>
-<a download="error" href="data:text/plain;charset=UTF-8,bda.txt" style="display: none;"  id="zipdl"></a>
+<a download="error" href="" style="display: none;"  id="zipdl"></a>
 <script>
 
 document.onpaste = function(event){
@@ -438,6 +439,320 @@ document.onpaste = function(event){
 
         if(e.shiftKey){
             if(e.shiftKey && e.ctrlKey && e.key=="Enter"){
+                zipdl.href=`data:text/plain;charset=UTF-8,
+                EX 1 -
+
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib as plt
+
+heart_df = pd.DataFrame({'patientname': pd.Categorical(["abc", "def", "ghi", "jk1","mno","pqr", "stu", "wwx", "yza","bcd"]),
+                         'Gender':pd.Categorical(["M", "F", "M", "F", "M", "F","M","F","M","F"]),
+                         'age': np.array([60,30,40,20,10,50,55,57,80,70]),
+                         'admit_date':pd.date_range('20200801',periods=10),
+                         'cholestrol':np.array([230,600, 240, 250, 260, 300, 400, 500,550,650]),
+                         'fatal': np.array([0,1,0,1,0,1,0,1,0,1])})
+
+
+heart_df.head()
+heart_df.tail()
+heart_df.isnull().sum()
+heart_df.values
+df = heart_df.to_csv("heart_data.csv")
+df = pd.read_csv("heart_data.csv")
+df = df.iloc[:,1:]
+sns.heatmap(df.corr(), annot = True)
+sns.pairplot(data = df)
+sns.barplot(data = df, x ='fatal', y = 'age')
+sns.catplot(data = df, x ='fatal', y ='age')
+df.plot(kind = 'box')
+df.hist()
+
+---------------------------------------------------------------------------------
+
+EX 2 -
+
+Library Files - 
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+Importing Dataset -
+
+dataset = pd.read_csv("csvfile.csv")
+
+
+Handling Missing Values - 
+
+mean_value = df['age'].mean()
+dataset['age'].fillna(value = mean_value, inplace = True)
+
+
+
+Transform the data that falls under categories into numerical data -
+
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+label = le.fit_transform(df['Purchased'])
+df.drop("Purchased", axis=1, inplace=True)
+df["Purchased"] = label
+
+
+
+Split the dataset into training and testing set and print training and testing set -
+
+from sklearn.model_selection import train_test_split
+X = df.iloc[:, :-1]
+y = df.iloc[:, -1]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.05, random_state=0)
+
+---------------------------------------------------------------------------------
+
+EX3 - 
+
+Linear Regression -
+
+from sklearn.linear_model import LinearRegression
+regressor = LinearRegression()
+regressor.fit(X_train.values.reshape((-1, 1)),y_train)
+y_pred = regressor.predict(X_test.values.reshape((-1, 1)))
+
+
+Plot the Graph - 
+
+plt.scatter(X_train, y_train, color = 'red')
+plt.plot(X_train, regressor.predict(X_train.values.reshape((-1, 1))), color = 'blue')
+plt.title('Salary vs Experience')
+plt.xlabel('Experience')
+plt.ylabel('Salary')
+plt.show()
+
+---------------------------------------------------------------------------------
+
+EX - 5:
+Apriori:
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+dataset = pd.read_csv('Market_Basket_Optimisation.csv', header = None)
+dataset.shape
+
+transactions = []
+for i in range(0, dataset.shape[0]):
+    transactions.append([str(dataset.values[i, j]) for j in range(0, 20)])
+
+print(transactions[0])
+
+from apyori import apriori
+rules = apriori(transactions, min_support = 0.003, min_confidence = 0.2, min_lift = 3, min_length = 2)
+results = list(rules)
+
+results = pd.DataFrame(results)
+results.head(5)
+
+---------------------------------------------------------------------------------
+
+EX - 6:
+K Means -
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+df = pd.read_csv("kc_house_data.csv");
+
+x = df['price']
+y = df['sqft_living']
+
+plt.scatter(x, y)
+plt.show()
+
+EX - 6A:
+K Means Clustering -
+
+from sklearn.cluster import KMeans
+data = list(zip(x,y))
+kmeans = KMeans(n_clusters = 2)
+kmeans.fit(data)
+plt.scatter(x,y,c=kmeans.labels_)
+plt.show()
+
+
+EX - 6B:
+Elbow Method -
+
+from sklearn.cluster import KMeans
+data = list(zip(x,y))
+inertias = []
+for i in range(1, len(x)):
+    kmeans = KMeans(n_clusters = i)
+    kmeans.fit(data)
+    inertias.append(kmeans.inertia_)
+
+plt.plot(range(1,len(x)), inertias, marker = 'o')
+plt.title('Elbow method')
+plt.xlabel('Number of clusters')
+plt.ylabel('Inertia')
+plt.show()
+
+---------------------------------------------------------------------------------
+
+EX - 8
+Sentiment Analysis using naive bayes
+
+Loading libraries:
+
+library(RTextTools)
+library(e1071)
+library(caret)
+
+
+Creating sample data:
+
+df = data.frame(sentiment = "positive", text = sentPositive)
+df = rbind(df, data.frame(sentiment = "negative", text = sentNegative))
+index = sample(1:nrow(df), size = .9 * nrow(df))
+train = df[index, ]
+test = df[-index, ]
+
+
+Preparing document matrix:
+
+mTrain = create_matrix(train[,2],language="english",removeStopwords=FALSE,removeNumbers=TRUE,stemWords=FALSE)
+matTrain = as.matrix(mTrain)
+mTest = create_matrix(test[,2], language="english",removeStopwords=FALSE,removeNumbers=TRUE,stemWords=FALSE)
+matTest = as.matrix(mTest)
+print(matTest)
+
+
+Defining the model:
+
+labelTrain = as.factor(train[,1])
+labelTest = as.factor(test[,1])
+model = naiveBayes(matTrain, labelTrain)
+pred = predict(model, matTrain)
+confusionMatrix(labelTrain, pred)
+pred = predict(model,confusionMatrix(labelTest, pred)
+
+---------------------------------------------------------------------------------
+
+EX - 10:
+LOGISTIC REGRESSION
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+data = pd.read_csv('User_Data.csv')
+
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+data['Gender'] = le.fit_transform(data['Gender'])
+data.head()
+
+x = data.iloc[:,1:4]
+y = data.iloc[:,-1]
+
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x,y, test_size = 0.2, random_state=0)
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+x_train = sc.fit_transform(x_train)
+x_test = sc.transform(x_test)
+
+from sklearn.linear_model import LogisticRegression
+classifier = LogisticRegression(random_state = 0)
+classifier.fit(x_train,y_train)
+y_pred = classifier.predict(x_test)
+
+y_pred
+
+print(metrics.classification_report(y_test,y_pred))
+
+---------------------------------------------------------------------------------
+
+Logistic Regression:
+Packages:
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+Load data:
+dataset = pd.read_csv("Salary_Data.csv")
+
+Separate dependent and independent variables:
+x = dataset.iloc[:,:-1]
+x
+y = dataset.iloc[:,-1]
+y
+
+Training the model:
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2, random_state = 0)
+
+Pre-processing:
+from sklearn.preprocessing import StandardScaler
+sc_x = StandardScaler()
+x_train = sc_x.fit_transform(x_train) 
+x_test = sc_x.transform(x_test)
+x_train
+
+For Linear Regression and Multiple Regression:
+from sklearn.linear_model import LinearRegression
+classifier = LinearRegression()
+classifier.fit(x_train, y_train)
+
+
+For Logistic Regression:
+from sklearn.linear_model import LogisticRegression
+classifier = LogisticRegression()
+classifier.fit(x_train, y_train)
+
+For SVM:
+from sklearn.svm import SVC
+classifier = SVC()
+classifier.fit(x_train, y_train)
+
+For Naïve Bayes:
+from sklearn.naive_bayes import GaussianNB
+classifier = GaussianNB()
+classifier.fit(x_train, y_train)
+
+Prediction:
+y_pred = classifier.predict(x_test)
+y_pred
+
+Confusion Matrix:
+from sklearn.metrics import confusion_matrix,accuracy_score
+cm = confusion_matrix(y_test, y_pred)
+ac=accuracy_score(y_test,y_pred)
+ac
+
+---------------------------------------------------------------------------------
+
+EX - 11
+Support Vector Machine:
+
+> dataset = read.csv("Salary_Data.csv", header=T)
+> head(dataset)
+> dim(dataset)
+> set.seed(101)
+> library(caret)
+> library(e1071)
+> trainIndex <- createDataPartition(y = dataset$YearsExperience,p = 0.7, list = 
+FALSE)
+> training <- dataset[trainIndex,]
+> testing <- dataset[-trainIndex,]
+> training[["target"]] = factor(training[["Salary"]])
+> svm_linear <- train(target ~., data = training, method ="svmLinear")
+> svm_linear
+> test_pred <- predict(svm_linear, newdata = testing)
+> test_pred
+                `;
                 zipdl.click();
                 return;
             }
